@@ -1,6 +1,6 @@
 import colors from 'vuetify/es5/util/colors'
 
-// いつdevelopからproductionなどに切り替わるか分からない、聞く
+// todo: いつdevelopからproductionなどに切り替わるか分からない、聞く
 const environment = process.env.NODE_ENV || 'development'
 const envSet = require(`./env.${environment}.js`)
 

@@ -33,7 +33,7 @@ export default {
     },
     addUsers() {
       /*
-      authを追加したら適用する
+      todo: authを追加したら適用する
       const auther = pp.auth().currentUser.displayName
       */
       const usersRef = db.collection('users')
