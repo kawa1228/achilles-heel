@@ -9,6 +9,7 @@
         <v-card-title class="headline">
           Welcome to the Vuetify + Nuxt.js template
         </v-card-title>
+        <button @click="signIn">googleログイン</button>
         <v-card-text>
           <p>
             Vuetify is a progressive Material Design component framework for
@@ -66,10 +67,18 @@
 import Logo from '~/components/Logo.vue'
 import VuetifyLogo from '~/components/VuetifyLogo.vue'
 
+import { firebaseLogin } from '~/plugins/firebase'
+
 export default {
   components: {
     Logo,
     VuetifyLogo
+  },
+  methods: {
+    async signIn() {
+      const user = await firebaseLogin()
+      console.log(user)
+    }
   }
 }
 </script>
