@@ -10,7 +10,22 @@
       >
     </div>
     <article class="new__note">
-      <button>アイキャッチ画像投稿</button>
+      <img
+        v-if="eyecatch"
+        class="new__note-img"
+        :src="eyecatch"
+        :alt="eyecatch_alt"
+      />
+      <label v-else class="new__note-label"
+        >アイキャッチ画像投稿
+        <input
+          id="file"
+          ref="fileInput"
+          type="file"
+          accept="image/png,image/jpeg,image/gif"
+          @change="attachImage"
+        />
+      </label>
       <input v-model="title" type="text" placeholder="タイトル" />
       <textarea
         id=""
@@ -25,14 +40,15 @@
 </template>
 
 <script>
-// import { db } from '~/plugins/firebase'
+// import { storage } from '~/plugins/firebase'
 
 export default {
   data() {
     return {
       title: '',
       body: '',
-      eyecatch: ''
+      eyecatch: '',
+      eyecatch_alt: ''
     }
   },
   computed: {
@@ -42,6 +58,9 @@ export default {
     postButtonClass() {
       return this.isDisabled ? 'new__post--disabled' : 'new__post--enabled'
     }
+  },
+  destroyed() {
+    this.clearImage()
   },
   methods: {
     postNote() {
@@ -56,9 +75,32 @@ export default {
         name: this.title,
         body: this.body,
         eyecatch: this.eyecatch,
-        eyecatch_alt: '見出し画像'
+        eyecatch_alt: this.eyecatch_alt
       })
       */
+    },
+    attachImage(e) {
+      const file = e.target.files[0]
+      console.log(file)
+      this.loadImage(file)
+
+      // const storageRef = storage.ref()
+      // const mountainsRef = storageRef.child('mountains.jpg')
+      // const mountainImagesRef = storageRef.child('images/mountains.jpg')
+    },
+    loadImage(file) {
+      // todo: exif対応はのちに考える
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        this.eyecatch = e.target.result
+      }
+      reader.readAsDataURL(file)
+    },
+    clearImage() {
+      console.log('clear', this.fileInput)
+      if (!this.fileInput || !this.fileInput.value) return
+      this.fileInput.value = ''
+      this.eyecatch = ''
     }
   }
 }
@@ -81,9 +123,22 @@ export default {
       color: #ec8181;
     }
   }
+
   &__note {
     display: flex;
     flex-direction: column;
+  }
+
+  // todo: 画像のスタイル考える
+  &__note-img {
+    height: 200px;
+    object-fit: cover;
+  }
+
+  &__note-label {
+    & > input {
+      display: none;
+    }
   }
 }
 </style>
