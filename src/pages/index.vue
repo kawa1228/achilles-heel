@@ -5,11 +5,11 @@
         <logo />
         <vuetify-logo />
       </div>
+      <button @click="signIn">googleログイン</button>
       <v-card>
         <v-card-title class="headline">
           Welcome to the Vuetify + Nuxt.js template
         </v-card-title>
-        <button @click="signIn">googleログイン</button>
         <v-card-text>
           <p>
             Vuetify is a progressive Material Design component framework for
@@ -76,8 +76,14 @@ export default {
   },
   methods: {
     async signIn() {
-      const user = await firebaseLogin()
-      console.log(user)
+      try {
+        const user = await firebaseLogin()
+        if (user) {
+          this.$router.push('/list')
+        }
+      } catch (error) {
+        alert(error)
+      }
     }
   }
 }
