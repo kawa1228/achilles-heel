@@ -1,6 +1,7 @@
 <template>
   <section class="new">
     <h1>new post</h1>
+    <button @click="onClick">参照</button>
     <div class="new__post">
       <button :class="postButtonClass" :disabled="isDisabled" @click="postNote">
         投稿
@@ -11,9 +12,9 @@
     </div>
     <article class="new__note">
       <img
-        v-if="eyecatch"
+        v-if="eyecatch_src"
         class="new__note-img"
-        :src="eyecatch"
+        :src="eyecatch_src"
         :alt="eyecatch_alt"
       />
       <label v-else class="new__note-label"
@@ -40,14 +41,15 @@
 </template>
 
 <script>
-// import { storage } from '~/plugins/firebase'
+import { storage } from '~/plugins/firebase'
 
 export default {
   data() {
     return {
       title: '',
       body: '',
-      eyecatch: '',
+      eyecatch_name: '',
+      eyecatch_src: '',
       eyecatch_alt: ''
     }
   },
@@ -63,8 +65,14 @@ export default {
     this.clearImage()
   },
   methods: {
+    onClick() {
+      const storageRef = storage.ref()
+      const downRef = storageRef.child('images/down.jpg')
+      console.log(downRef)
+    },
     postNote() {
       console.log('post')
+      this.uploadImage()
       /*
       const d = new Date()
       const today = d.toLocaleDateString()
@@ -74,7 +82,7 @@ export default {
         created_at: today,
         name: this.title,
         body: this.body,
-        eyecatch: this.eyecatch,
+        eyecatch_src: this.eyecatch_src,
         eyecatch_alt: this.eyecatch_alt
       })
       */
@@ -83,24 +91,46 @@ export default {
       const file = e.target.files[0]
       console.log(file)
       this.loadImage(file)
-
-      // const storageRef = storage.ref()
-      // const mountainsRef = storageRef.child('mountains.jpg')
-      // const mountainImagesRef = storageRef.child('images/mountains.jpg')
+      this.uploadImage(file)
     },
     loadImage(file) {
       // todo: exif対応はのちに考える
+      if (!file) return
       const reader = new FileReader()
       reader.onload = (e) => {
-        this.eyecatch = e.target.result
+        this.eyecatch_src = e.target.result
+        this.eyecatch_name = file.name
       }
       reader.readAsDataURL(file)
+    },
+    uploadImage(file) {
+      // todo: firebase storageのセキュリティルールを追加
+      const storageRef = storage.ref()
+
+      const uploadTask = storageRef.child(`images/${file.name}`).put(file)
+      uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+          console.log('snapshot', snapshot)
+        },
+        (error) => {
+          console.log('err', error)
+        },
+        () => {
+          // Handle successful uploads on complete
+          // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+          uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+            console.log('File available at', downloadURL)
+          })
+        }
+      )
     },
     clearImage() {
       console.log('clear', this.fileInput)
       if (!this.fileInput || !this.fileInput.value) return
       this.fileInput.value = ''
-      this.eyecatch = ''
+      // todo: すべてクリアする
+      this.eyecatch_src = ''
     }
   }
 }
