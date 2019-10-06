@@ -1,9 +1,10 @@
 import firebase from 'firebase'
 const app = firebase.initializeApp(process.env.firebaseConfig)
 
-export const storage = app.storage()
+// Firestore
 export const db = app.firestore()
-
+// ストレージ
+export const storage = app.storage()
 // auth認証
 const provider = new firebase.auth.GoogleAuthProvider()
 export const firebaseLogin = () => {
