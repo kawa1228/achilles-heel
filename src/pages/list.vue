@@ -2,6 +2,9 @@
   <section>
     <h1>list</h1>
     <button @click="onClick">追加</button>
+    <nuxt-link to="/new">
+      <button>投稿</button>
+    </nuxt-link>
   </section>
 </template>
 
