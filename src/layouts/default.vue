@@ -1,10 +1,14 @@
 <template>
   <v-app dark>
-    <v-app-bar fixed app>
-      <v-toolbar-title v-text="'Achilles heels'" />
-      <v-spacer />
-      <v-toolbar-title v-text="'login'" />
-    </v-app-bar>
+    <v-toolbar fixed app>
+      <v-toolbar-title>
+        <v-btn to="/" nuxt v-text="'Achilles heels'" />
+      </v-toolbar-title>
+      <div class="flex-grow-1"></div>
+      <v-toolbar-items>
+        <v-btn to="/admin" nuxt v-text="'login'" />
+      </v-toolbar-items>
+    </v-toolbar>
     <v-content>
       <v-container>
         <nuxt />
