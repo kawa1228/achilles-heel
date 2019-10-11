@@ -5,10 +5,10 @@
         <logo />
         <vuetify-logo />
       </div>
-      <button @click="signIn">googleログイン</button>
       <v-card>
         <v-card-title class="headline">
           Welcome to the Vuetify + Nuxt.js template
+          <nuxt-link to="/admin">ログイン</nuxt-link>
         </v-card-title>
         <v-card-text>
           <p>
@@ -67,24 +67,10 @@
 import Logo from '~/components/Logo.vue'
 import VuetifyLogo from '~/components/VuetifyLogo.vue'
 
-import { firebaseLogin } from '~/plugins/firebase'
-
 export default {
   components: {
     Logo,
     VuetifyLogo
-  },
-  methods: {
-    async signIn() {
-      try {
-        const user = await firebaseLogin()
-        if (user) {
-          this.$router.push('/list')
-        }
-      } catch (error) {
-        alert(error)
-      }
-    }
   }
 }
 </script>
