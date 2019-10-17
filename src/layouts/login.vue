@@ -1,10 +1,10 @@
 <template>
   <v-app dark>
-    <v-toolbar fixed app max-height="56">
+    <v-app-bar fixed app max-height="56">
       <v-toolbar-title>
         <v-btn to="/" nuxt v-text="'Achilles heels'" />
       </v-toolbar-title>
-    </v-toolbar>
+    </v-app-bar>
     <v-content>
       <v-container>
         <nuxt />
