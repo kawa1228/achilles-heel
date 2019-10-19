@@ -6,6 +6,9 @@ const envSet = require(`./env.${environment}.js`)
 
 export default {
   mode: 'spa',
+  server: {
+    port: 3000
+  },
   srcDir: 'src/',
   env: envSet,
   /*
