@@ -12,9 +12,9 @@
     </div>
     <article class="new__note">
       <img
-        v-if="eyecatch_src"
+        v-if="eyecatch_preview"
         class="new__note-img"
-        :src="eyecatch_src"
+        :src="eyecatch_preview"
         :alt="eyecatch_alt"
       />
       <label v-else class="new__note-label"
@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { storage } from '~/plugins/firebase'
+import { storage, db } from '~/plugins/firebase'
 
 export default {
   data() {
@@ -49,6 +49,7 @@ export default {
       title: '',
       body: '',
       eyecatch_name: '',
+      eyecatch_preview: '',
       eyecatch_src: '',
       eyecatch_alt: ''
     }
@@ -73,7 +74,6 @@ export default {
     postNote() {
       console.log('post')
       this.uploadImage()
-      /*
       const d = new Date()
       const today = d.toLocaleDateString()
 
@@ -82,23 +82,25 @@ export default {
         created_at: today,
         name: this.title,
         body: this.body,
-        eyecatch_src: this.eyecatch_src,
-        eyecatch_alt: this.eyecatch_alt
+        eyecatch_src: this.eyecatch_src
+          ? this.eyecatch_src
+          : 'https://placehold.jp/150x150.png',
+        eyecatch_alt: this.eyecatch_alt ? this.eyecatch_alt : '投稿画像'
       })
-      */
+      this.uploadImage(this.file)
     },
     attachImage(e) {
       const file = e.target.files[0]
       console.log(file)
       this.loadImage(file)
-      this.uploadImage(file)
     },
+    // preview用
     loadImage(file) {
       // todo: exif対応はのちに考える
       if (!file) return
       const reader = new FileReader()
       reader.onload = (e) => {
-        this.eyecatch_src = e.target.result
+        this.eyecatch_preview = e.target.result
         this.eyecatch_name = file.name
       }
       reader.readAsDataURL(file)
@@ -121,6 +123,7 @@ export default {
           // For instance, get the download URL: https://firebasestorage.googleapis.com/...
           uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
             console.log('File available at', downloadURL)
+            this.eyecatch_src = downloadURL
           })
         }
       )
