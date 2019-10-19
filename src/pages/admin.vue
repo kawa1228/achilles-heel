@@ -14,20 +14,17 @@
 </template>
 
 <script>
-import { firebaseLogin } from '~/plugins/firebase'
+import { mapState } from 'vuex'
 
 export default {
   layout: 'login',
+  computed: {
+    ...mapState(['user'])
+  },
   methods: {
     async signIn() {
-      try {
-        const user = await firebaseLogin()
-        if (user) {
-          this.$router.push('/list')
-        }
-      } catch (error) {
-        alert(error)
-      }
+      await this.$store.dispatch('fetchUser')
+      this.$router.push('/list')
     }
   }
 }
