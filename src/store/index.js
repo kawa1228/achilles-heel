@@ -15,6 +15,7 @@ export const mutations = {
 }
 
 export const actions = {
+  // adminページからログインしたとき
   async fetchUser({ state, dispatch }) {
     if (state.user !== null) return
 
@@ -25,7 +26,12 @@ export const actions = {
       alert('ユーザー情報がありません')
       return
     }
-    dispatch('addUser', user.additionalUserInfo.profile)
+    const userInfo = {
+      displayName: user.name,
+      email: user.email,
+      photoURL: user.picture
+    }
+    dispatch('addUser', userInfo)
   },
   addUser(context, payload) {
     context.commit('setUser', payload)

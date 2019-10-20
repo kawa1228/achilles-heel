@@ -4,11 +4,11 @@
     <v-navigation-drawer v-model="drawer" absolute temporary>
       <v-list-item v-if="user">
         <v-list-item-avatar>
-          <v-img v-if="user" :src="user.picture"></v-img>
+          <v-img v-if="user" :src="user.photoURL"></v-img>
         </v-list-item-avatar>
 
         <v-list-item-content>
-          <v-list-item-title>{{ user.name }}</v-list-item-title>
+          <v-list-item-title>{{ user.displayName }}</v-list-item-title>
           <v-list-item-subtitle>{{ user.email }}</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
@@ -33,7 +33,7 @@
       <img
         v-else
         class="toolbar__user-icon"
-        :src="user.picture"
+        :src="user.photoURL"
         alt=""
         @click.stop="drawer = !drawer"
       />
