@@ -13,8 +13,8 @@ import { db } from '~/plugins/firebase'
 
 export default {
   mounted() {
-    this.addUsers()
-    this.posts()
+    // this.addUsers()
+    // this.posts()
     // this.setCities()
   },
   methods: {

@@ -10,5 +10,8 @@ const provider = new firebase.auth.GoogleAuthProvider()
 export const firebaseLogin = () => {
   return app.auth().signInWithPopup(provider)
 }
+export const firebaseLogout = () => {
+  return app.auth().signOut()
+}
 
 export default app

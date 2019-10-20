@@ -21,6 +21,11 @@
             <v-list-item-title>{{ item.title }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+        <v-list-item @click="signOut">
+          <v-list-item-content>
+            <v-list-item-title>Logout</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
     <!-- ツールバー -->
@@ -65,6 +70,14 @@ export default {
   },
   computed: {
     ...mapState(['user'])
+  },
+  methods: {
+    async signOut() {
+      if (!this.user) return
+      await this.$store.dispatch('logoutUser')
+      console.log('ログアウトしました')
+      this.$router.push('/')
+    }
   }
 }
 </script>
