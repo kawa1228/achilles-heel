@@ -1,7 +1,6 @@
 <template>
   <section class="new">
     <h1>new post</h1>
-    <button @click="onClick">参照</button>
     <div class="new__post">
       <button :class="postButtonClass" :disabled="isDisabled" @click="postNote">
         投稿
@@ -12,19 +11,18 @@
     </div>
     <article class="new__note">
       <img
-        v-if="eyecatch_preview"
+        v-if="preview"
         class="new__note-img"
-        :src="eyecatch_preview"
-        :alt="eyecatch_alt"
+        :src="preview"
+        :alt="fileName"
       />
       <label v-else class="new__note-label"
         >アイキャッチ画像投稿
         <input
           id="file"
-          ref="fileInput"
           type="file"
           accept="image/png,image/jpeg,image/gif"
-          @change="attachImage"
+          @change="previewImage"
         />
       </label>
       <input v-model="title" type="text" placeholder="タイトル" />
@@ -41,17 +39,14 @@
 </template>
 
 <script>
-import { storage, db } from '~/plugins/firebase'
-
 export default {
   data() {
     return {
       title: '',
       body: '',
-      eyecatch_name: '',
-      eyecatch_preview: '',
-      eyecatch_src: '',
-      eyecatch_alt: ''
+      fileName: '',
+      preview: '',
+      file: ''
     }
   },
   computed: {
@@ -66,74 +61,44 @@ export default {
     this.clearImage()
   },
   methods: {
-    onClick() {
-      const storageRef = storage.ref()
-      const downRef = storageRef.child('images/down.jpg')
-      console.log(downRef)
-    },
-    postNote() {
-      console.log('post')
-      this.uploadImage()
+    async postNote() {
       const d = new Date()
       const today = d.toLocaleDateString()
 
-      const articlesRef = db.collection('articles')
-      articlesRef.add({
-        created_at: today,
-        name: this.title,
-        body: this.body,
-        eyecatch_src: this.eyecatch_src
-          ? this.eyecatch_src
-          : 'https://placehold.jp/150x150.png',
-        eyecatch_alt: this.eyecatch_alt ? this.eyecatch_alt : '投稿画像'
-      })
-      this.uploadImage(this.file)
+      const contents = {
+        note: {
+          created_at: today,
+          title: this.title,
+          body: this.body
+        },
+        image: {
+          file: this.file,
+          name: this.fileName
+        }
+      }
+      await this.$store.dispatch('postNote', contents)
+      // todo: loadingやredirectを考える
+      console.log('load finished')
+      this.clearImage()
     },
-    attachImage(e) {
+    // todo: exif対応はのちに考える
+    previewImage(e) {
       const file = e.target.files[0]
-      console.log(file)
-      this.loadImage(file)
-    },
-    // preview用
-    loadImage(file) {
-      // todo: exif対応はのちに考える
       if (!file) return
+      this.file = file
       const reader = new FileReader()
       reader.onload = (e) => {
-        this.eyecatch_preview = e.target.result
-        this.eyecatch_name = file.name
+        this.preview = e.target.result
+        this.fileName = file.name
       }
       reader.readAsDataURL(file)
     },
-    uploadImage(file) {
-      // todo: firebase storageのセキュリティルールを追加
-      const storageRef = storage.ref()
-
-      const uploadTask = storageRef.child(`images/${file.name}`).put(file)
-      uploadTask.on(
-        'state_changed',
-        (snapshot) => {
-          console.log('snapshot', snapshot)
-        },
-        (error) => {
-          console.log('err', error)
-        },
-        () => {
-          // Handle successful uploads on complete
-          // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-          uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-            console.log('File available at', downloadURL)
-            this.eyecatch_src = downloadURL
-          })
-        }
-      )
-    },
     clearImage() {
-      console.log('clear', this.fileInput)
-      if (!this.fileInput || !this.fileInput.value) return
-      this.fileInput.value = ''
-      // todo: すべてクリアする
-      this.eyecatch_src = ''
+      this.title = ''
+      this.body = ''
+      this.fileName = ''
+      this.preview = ''
+      this.file = ''
     }
   }
 }

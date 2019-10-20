@@ -19,8 +19,6 @@ export default {
   },
   methods: {
     onClick() {
-      console.log('hoge')
-
       /*
       db.collection('users')
         .get()

@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import { firebaseLogin, firebaseLogout } from '~/plugins/firebase'
+import { firebaseLogin, firebaseLogout, storage, db } from '~/plugins/firebase'
+
 Vue.use(Vuex)
 
 export const state = () => ({
@@ -52,5 +53,41 @@ export const actions = {
   },
   clearUser({ commit }) {
     commit('clearUser')
+  },
+  // noteを投稿
+  async postNote(context, payload) {
+    const contents = payload
+    const loadImage = await context.dispatch('uploadImage', {
+      name: contents.image.name,
+      file: contents.image.file
+    })
+    contents.image = loadImage
+
+    const articlesRef = db.collection('articles')
+    await articlesRef.add(contents)
+  },
+  // ストレージに画像を追加
+  uploadImage(context, payload) {
+    if (!payload.file) {
+      return {
+        name: 'サンプル画像',
+        src: 'https://placehold.jp/150x150.png'
+      }
+    }
+    const storageRef = storage.ref()
+
+    return new Promise((resolve, reject) => {
+      storageRef
+        .child(`images/${payload.name}`)
+        .put(payload.file)
+        .then((snapshot) => {
+          snapshot.ref.getDownloadURL().then((url) => {
+            resolve({ name: payload.name, src: url })
+          })
+        })
+        .catch((err) => {
+          console.log('画像投稿エラー', err)
+        })
+    })
   }
 }
