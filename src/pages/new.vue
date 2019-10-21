@@ -1,5 +1,5 @@
 <template>
-  <section class="new">
+  <section v-if="!isLoading" class="new">
     <h1>new post</h1>
     <div class="new__post">
       <button :class="postButtonClass" :disabled="isDisabled" @click="postNote">
@@ -36,6 +36,13 @@
       />
     </article>
   </section>
+  <v-layout v-else fill-height align-center justify-center ma-0>
+    <!-- 以下のコンポーネントでクルクル回るローディング画像を表示しています。 -->
+    <v-progress-circular
+      indeterminate
+      color="grey lighten-5"
+    ></v-progress-circular>
+  </v-layout>
 </template>
 
 <script>
@@ -48,7 +55,8 @@ export default {
       body: '',
       fileName: '',
       preview: '',
-      file: ''
+      file: '',
+      isLoading: false
     }
   },
   computed: {
@@ -62,8 +70,12 @@ export default {
   destroyed() {
     this.clearImage()
   },
+  created() {
+    this.isLoading = false
+  },
   methods: {
     async postNote() {
+      this.isLoading = true
       const now = moment().format()
       const contents = {
         created_at: now,
@@ -78,8 +90,9 @@ export default {
       }
       await this.$store.dispatch('postNote', contents)
       // todo: loadingやredirectを考える
-      console.log('load finished')
-      this.clearImage()
+      await this.clearImage()
+      this.$router.push('/')
+      this.isLoading = false
     },
     // todo: exif対応はのちに考える
     previewImage(e) {
