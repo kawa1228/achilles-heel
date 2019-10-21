@@ -39,6 +39,8 @@
 </template>
 
 <script>
+import moment from 'moment'
+
 export default {
   data() {
     return {
@@ -62,12 +64,10 @@ export default {
   },
   methods: {
     async postNote() {
-      const d = new Date()
-      const today = d.toLocaleDateString()
-
+      const now = moment().format()
       const contents = {
+        created_at: now,
         note: {
-          created_at: today,
           title: this.title,
           body: this.body
         },
