@@ -16,7 +16,12 @@
       <v-divider></v-divider>
 
       <v-list dense>
-        <v-list-item v-for="item in items" :key="item.title" :to="item.to" nuxt>
+        <v-list-item
+          v-for="item in navItems"
+          :key="item.title"
+          :to="item.to"
+          nuxt
+        >
           <v-list-item-content>
             <v-list-item-title>{{ item.title }}</v-list-item-title>
           </v-list-item-content>
@@ -60,16 +65,19 @@ import { mapState } from 'vuex'
 export default {
   data() {
     return {
-      drawer: null,
-      items: [
-        { title: 'Top', to: '/' },
-        { title: 'List', to: '/list' },
-        { title: 'Post', to: '/new' }
-      ]
+      drawer: null
     }
   },
   computed: {
-    ...mapState(['user'])
+    ...mapState(['user']),
+    navItems() {
+      const items = [
+        { title: 'Top', to: '/' },
+        { title: 'List', to: this.user ? `/${this.user.uid}/list` : '/' },
+        { title: 'Post', to: '/new' }
+      ]
+      return items
+    }
   },
   methods: {
     async signOut() {
