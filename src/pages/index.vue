@@ -18,7 +18,7 @@
         <em><small>&mdash; George Gershwin</small></em>
       </div>
       <hr class="my-3" />
-      <v-row>
+      <v-row v-if="articles && articles.length">
         <v-col v-for="(item, i) in articles" :key="i" cols="12">
           <v-card dark>
             <div class="d-flex flex-no-wrap justify-space-between">
@@ -32,7 +32,22 @@
               </div>
 
               <v-avatar class="ma-3" size="125" tile>
-                <v-img :src="item.image.src" :alt="item.image.name"></v-img>
+                <v-img
+                  v-if="item.image.src"
+                  :src="item.image.src"
+                  lazy-src="https://placehold.jp/150x150.png"
+                  :alt="item.image.name"
+                >
+                  <template v-slot:placeholder>
+                    <v-layout fill-height align-center justify-center ma-0>
+                      <!-- 以下のコンポーネントでクルクル回るローディング画像を表示しています。 -->
+                      <v-progress-circular
+                        indeterminate
+                        color="grey lighten-5"
+                      ></v-progress-circular>
+                    </v-layout>
+                  </template>
+                </v-img>
               </v-avatar>
             </div>
           </v-card>
