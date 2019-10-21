@@ -29,6 +29,7 @@
                 ></v-card-title>
 
                 <v-card-text v-text="item.note.body" />
+                <v-card-text v-text="item.created_at" />
               </div>
 
               <v-avatar class="ma-3" size="125" tile>
@@ -63,9 +64,12 @@ export default {
   async asyncData() {
     const articlesRef = db.collection('articles')
 
-    const querySnapshot = await articlesRef.get().catch((err) => {
-      console.log('取得エラー', err)
-    })
+    const querySnapshot = await articlesRef
+      .orderBy('created_at', 'desc')
+      .get()
+      .catch((err) => {
+        console.log('取得エラー', err)
+      })
 
     const articles = []
     querySnapshot.forEach((doc) => {

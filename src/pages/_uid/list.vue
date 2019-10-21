@@ -10,6 +10,7 @@
             ></v-card-title>
 
             <v-card-text v-text="item.note.body" />
+            <v-card-text v-text="item.created_at" />
           </div>
 
           <v-avatar class="ma-3" size="125" tile>
@@ -42,7 +43,7 @@ import { db } from '~/plugins/firebase'
 export default {
   async asyncData({ params }) {
     const articlesRef = await db.collection('articles')
-    const query = await articlesRef.where('uid', '==', params.uid)
+    const query = articlesRef.where('uid', '==', params.uid)
     const item = []
     await query
       .get()
@@ -56,6 +57,14 @@ export default {
       .catch((err) => {
         console.log('ユーザーの記事取得エラー', err)
       })
+    // 異なるフィールドにorderByは使えないので昇順にする
+    if (item.length) {
+      item.sort((a, b) => {
+        const aDate = new Date(a.created_at)
+        const bDate = new Date(b.created_at)
+        return aDate < bDate ? 1 : -1
+      })
+    }
     return { item }
   }
 }
