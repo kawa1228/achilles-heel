@@ -1,7 +1,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import { firebaseLogin, firebaseLogout, storage, db } from '~/plugins/firebase'
+import {
+  firebaseLogin,
+  firebaseLogout,
+  storage,
+  db,
+  arrayUnion
+} from '~/plugins/firebase'
 
 Vue.use(Vuex)
 
@@ -27,17 +33,20 @@ export const actions = {
       alert('ログインエラー', err)
       throw err
     })
-    if (!res) {
-      alert('ユーザー情報がありません')
-      return
-    }
-    const user = res.additionalUserInfo.profile
-    console.log('初回ログイン', user)
+    console.log('初回ログイン', res)
+
+    const profile = res.additionalUserInfo.profile
+    // todo: articlesが初期化されちゃうからuserにarticleを持たせるのをやめるwhereFieldして取得する
     const userInfo = {
-      displayName: user.name ? user.name : 'sample',
-      email: user.email ? user.email : 'xxx@sample.com',
-      photoURL: user.picture ? user.picture : 'https://placehold.jp/150x150.png'
+      displayName: profile.name || 'sample',
+      email: profile.email || 'xxx@sample.com',
+      photoURL: profile.picture || 'https://placehold.jp/150x150.png',
+      uid: res.user.uid,
+      articles: []
     }
+
+    const userRef = db.collection('users')
+    await userRef.doc(userInfo.uid).set(userInfo)
     dispatch('addUser', userInfo)
   },
   // ユーザー情報の追加
@@ -62,9 +71,22 @@ export const actions = {
       file: contents.image.file
     })
     contents.image = loadImage
+    // userの参照型を取得
+    const usersRef = await db.doc(`users/${context.state.user.uid}`)
+    contents.user = usersRef
 
     const articlesRef = db.collection('articles')
+    // articleコレクションを更新
     await articlesRef.add(contents)
+
+    // userコレクションを更新, ここは削除予定
+    await usersRef
+      .update({
+        articles: arrayUnion(contents)
+      })
+      .catch((err) => {
+        console.log('エラー', err)
+      })
   },
   // ストレージに画像を追加
   uploadImage(context, payload) {
