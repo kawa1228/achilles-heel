@@ -35,7 +35,6 @@
                 <v-img
                   v-if="item.image.src"
                   :src="item.image.src"
-                  lazy-src="https://placehold.jp/150x150.png"
                   :alt="item.image.name"
                 >
                   <template v-slot:placeholder>
