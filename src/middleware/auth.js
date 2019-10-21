@@ -22,5 +22,5 @@ export default async function({ store, redirect, route }) {
     uid: user.uid
   }
   await store.dispatch('addUser', userInfo)
-  return redirect(`/${userInfo.uid}/list`)
+  return redirect('/')
 }
