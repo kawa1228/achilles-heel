@@ -20,7 +20,7 @@
       <hr class="my-3" />
       <v-row v-if="articles && articles.length">
         <v-col v-for="(item, i) in articles" :key="i" cols="12">
-          <v-card dark>
+          <v-card dark nuxt :to="`/${item.noteId}/note`">
             <div class="d-flex flex-no-wrap justify-space-between">
               <div>
                 <v-card-title
@@ -61,22 +61,6 @@
 import { db } from '~/plugins/firebase'
 
 export default {
-  data() {
-    return {
-      items: [
-        {
-          src: 'https://placehold.jp/150x150.png',
-          title: 'test title',
-          artist: 'ここに本文が入ります'
-        },
-        {
-          src: 'https://placehold.jp/150x150.png',
-          title: 'test title 2',
-          artist: 'ここに本文が入ります'
-        }
-      ]
-    }
-  },
   async asyncData() {
     const articlesRef = db.collection('articles')
 
@@ -86,7 +70,7 @@ export default {
 
     const articles = []
     querySnapshot.forEach((doc) => {
-      articles.push(doc.data())
+      articles.push({ ...doc.data(), noteId: doc.id })
     })
     return { articles }
   }
