@@ -18,21 +18,21 @@
         <em><small>&mdash; George Gershwin</small></em>
       </div>
       <hr class="my-3" />
-      <v-row dense>
-        <v-col v-for="(item, i) in items" :key="i" cols="12">
-          <v-card :color="item.color" dark>
+      <v-row>
+        <v-col v-for="(item, i) in articles" :key="i" cols="12">
+          <v-card dark>
             <div class="d-flex flex-no-wrap justify-space-between">
               <div>
                 <v-card-title
                   class="headline"
-                  v-text="item.title"
+                  v-text="item.note.title"
                 ></v-card-title>
 
-                <v-card-text v-text="item.artist" />
+                <v-card-text v-text="item.note.body" />
               </div>
 
               <v-avatar class="ma-3" size="125" tile>
-                <v-img :src="item.src"></v-img>
+                <v-img :src="item.image.src" :alt="item.image.name"></v-img>
               </v-avatar>
             </div>
           </v-card>
@@ -43,6 +43,8 @@
 </template>
 
 <script>
+import { db } from '~/plugins/firebase'
+
 export default {
   data() {
     return {
@@ -59,6 +61,19 @@ export default {
         }
       ]
     }
+  },
+  async asyncData() {
+    const articlesRef = db.collection('articles')
+
+    const querySnapshot = await articlesRef.get().catch((err) => {
+      console.log('取得エラー', err)
+    })
+
+    const articles = []
+    querySnapshot.forEach((doc) => {
+      articles.push(doc.data())
+    })
+    return { articles }
   }
 }
 </script>
