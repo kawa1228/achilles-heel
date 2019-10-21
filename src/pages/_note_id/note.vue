@@ -5,12 +5,21 @@
       <v-img
         :src="item.image.src"
         :alt="item.image.name"
-        lazy-src="https://placehold.jp/150x150.png"
         aspect-ratio="1"
         class="grey lighten-2"
         max-width="500"
         max-height="300"
-      ></v-img>
+      >
+        <template v-slot:placeholder>
+          <v-layout fill-height align-center justify-center ma-0>
+            <!-- 以下のコンポーネントでクルクル回るローディング画像を表示しています。 -->
+            <v-progress-circular
+              indeterminate
+              color="grey lighten-5"
+            ></v-progress-circular>
+          </v-layout>
+        </template>
+      </v-img>
     </v-row>
     <p>{{ item.note.body }}</p>
   </article>
