@@ -84,7 +84,7 @@ export default {
       if (!this.user) return
       await this.$store.dispatch('logoutUser')
       console.log('ログアウトしました')
-      this.$router.push('/')
+      this.$router.push('/admin')
     }
   }
 }

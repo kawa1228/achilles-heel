@@ -86,7 +86,7 @@ export default {
    */
   build: {
     // 反映されない場合キャッシュを消す rm -rf node_modules/.cache/hard-source/
-    hardSource: true,
+    // hardSource: true,
     /*
      ** You can extend webpack config here
      */

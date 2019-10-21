@@ -24,7 +24,7 @@ export default {
   methods: {
     async signIn() {
       await this.$store.dispatch('fetchUser')
-      this.$router.push('/list')
+      this.$router.push('/')
     }
   }
 }

@@ -44,7 +44,7 @@ export default {
     const articlesRef = await db.collection('articles')
     const query = await articlesRef.where('uid', '==', params.uid)
     const item = []
-    query
+    await query
       .get()
       .then((querySnapshot) => {
         if (!querySnapshot.empty) {
