@@ -1,13 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import {
-  firebaseLogin,
-  firebaseLogout,
-  storage,
-  db,
-  arrayUnion
-} from '~/plugins/firebase'
+import { firebaseLogin, firebaseLogout, storage, db } from '~/plugins/firebase'
 
 Vue.use(Vuex)
 
@@ -41,8 +35,7 @@ export const actions = {
       displayName: profile.name || 'sample',
       email: profile.email || 'xxx@sample.com',
       photoURL: profile.picture || 'https://placehold.jp/150x150.png',
-      uid: res.user.uid,
-      articles: []
+      uid: res.user.uid
     }
 
     const userRef = db.collection('users')
@@ -71,22 +64,12 @@ export const actions = {
       file: contents.image.file
     })
     contents.image = loadImage
-    // userの参照型を取得
-    const usersRef = await db.doc(`users/${context.state.user.uid}`)
-    contents.user = usersRef
+    contents.uid = context.state.user.uid
+    contents.author = context.state.user
 
     const articlesRef = db.collection('articles')
     // articleコレクションを更新
     await articlesRef.add(contents)
-
-    // userコレクションを更新, ここは削除予定
-    await usersRef
-      .update({
-        articles: arrayUnion(contents)
-      })
-      .catch((err) => {
-        console.log('エラー', err)
-      })
   },
   // ストレージに画像を追加
   uploadImage(context, payload) {
