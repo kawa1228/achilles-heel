@@ -1,8 +1,13 @@
 import firebase from 'firebase'
-const app = firebase.initializeApp(process.env.firebaseConfig)
+
+export const app = firebase.initializeApp(process.env.firebaseConfig)
 
 // Firestore
 export const db = app.firestore()
+// フィールドの配列を追加
+export const arrayUnion = (contents) => {
+  return firebase.firestore.FieldValue.arrayUnion(contents)
+}
 // ストレージ
 export const storage = app.storage()
 // auth認証
@@ -13,5 +18,3 @@ export const firebaseLogin = () => {
 export const firebaseLogout = () => {
   return app.auth().signOut()
 }
-
-export default app
