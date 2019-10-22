@@ -12,7 +12,7 @@
         >
           <v-layout fill-height align-center justify-center ma-0>
             <!-- 以下のコンポーネントでクルクル回るローディング画像を表示しています。 -->
-            <label class="note-label"
+            <label v-if="!preview" class="note-label"
               >画像を投稿する
               <input
                 id="file"
@@ -69,13 +69,11 @@ export default {
   computed: {
     isDisabled() {
       return !this.title || !this.body
-    },
-    postButtonClass() {
-      return this.isDisabled ? 'new__post--disabled' : 'new__post--enabled'
     }
   },
   destroyed() {
     this.clearImage()
+    this.isLoading = false
   },
   created() {
     this.isLoading = false
@@ -99,7 +97,6 @@ export default {
       // todo: loadingやredirectを考える
       await this.clearImage()
       this.$router.push('/')
-      this.isLoading = false
     },
     // todo: exif対応はのちに考える
     previewImage(e) {
