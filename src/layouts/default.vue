@@ -8,8 +8,10 @@
         </v-list-item-avatar>
 
         <v-list-item-content>
-          <v-list-item-title>{{ user.displayName }}</v-list-item-title>
-          <v-list-item-subtitle>{{ user.email }}</v-list-item-subtitle>
+          <!-- <v-list-item-title>{{ user.displayName }}</v-list-item-title> -->
+          <v-list-item-subtitle>{{
+            user.email | maskEmail
+          }}</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
 
@@ -64,6 +66,12 @@
 import { mapState } from 'vuex'
 
 export default {
+  filters: {
+    maskEmail(email) {
+      if (!email) return
+      return email.replace(/.*(.{3}@)/g, 'xxx$1')
+    }
+  },
   data() {
     return {
       drawer: null

@@ -3,8 +3,11 @@
     <v-flex v-if="item && item.length" xs12 sm8 md6>
       <div v-if="user" class="text-xs-right">
         <!-- &mdash; George Gershwin -->
-        <em
+        <!-- <em
           ><small>{{ user.displayName }}投稿一覧</small></em
+        > -->
+        <em
+          ><small>{{ user.email | maskEmail }}の投稿一覧</small></em
         >
       </div>
       <hr class="my-3" />
@@ -81,6 +84,12 @@ export default {
       })
     }
     return { item }
+  },
+  filters: {
+    maskEmail(email) {
+      if (!email) return
+      return email.replace(/.*(.{3}@)/g, 'xxx$1')
+    }
   }
 }
 </script>
