@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import moment from 'moment'
+import dayjs from 'dayjs'
 
 export default {
   data() {
@@ -81,7 +81,7 @@ export default {
   methods: {
     async postNote() {
       this.isLoading = true
-      const now = moment().format()
+      const now = dayjs().format()
       const contents = {
         created_at: now,
         note: {
