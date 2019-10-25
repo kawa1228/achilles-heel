@@ -59,7 +59,7 @@ export default {
   sitemap: {
     hostname: 'https://my-achilles-heel.firebaseapp.com',
     lastmod: '2019-10-25',
-    sitemaps: []
+    path: '/sitemap.xml'
   },
   /*
    ** Axios module configuration
