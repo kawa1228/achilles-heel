@@ -53,8 +53,14 @@ export default {
    */
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    '@nuxtjs/sitemap'
   ],
+  sitemap: {
+    hostname: 'https://my-achilles-heel.firebaseapp.com',
+    lastmod: '2019-10-25',
+    sitemaps: []
+  },
   /*
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
