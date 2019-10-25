@@ -44,6 +44,7 @@ export const actions = {
   },
   // ユーザー情報の追加
   addUser(context, payload) {
+    console.log('hoge')
     context.commit('setUser', payload)
   },
   async logoutUser({ state, dispatch }) {
