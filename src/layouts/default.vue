@@ -36,7 +36,8 @@
     <!-- ツールバー -->
     <v-app-bar fixed app max-height="56">
       <nuxt-link class="toolbar__title" to="/">
-        <v-toolbar-title>Achilles heels</v-toolbar-title>
+        <!-- Achilles heels -->
+        <v-toolbar-title>タイトル</v-toolbar-title>
       </nuxt-link>
       <v-spacer></v-spacer>
       <v-btn v-if="!user" to="/admin" nuxt v-text="'login'" />

@@ -3,7 +3,7 @@
     <v-app-bar fixed app max-height="56">
       <v-toolbar-title>
         <nuxt-link class="toolbar__title" to="/">
-          <v-toolbar-title>Achilles heels</v-toolbar-title>
+          <v-toolbar-title>タイトル</v-toolbar-title>
         </nuxt-link>
       </v-toolbar-title>
     </v-app-bar>
