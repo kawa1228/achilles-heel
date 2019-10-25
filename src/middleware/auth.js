@@ -8,7 +8,6 @@ export default ({ store, route }) => {
   app.auth().onAuthStateChanged(async (user) => {
     if (user) {
       // User is signed in.
-      console.log('user情報の確認', user)
       const userInfo = {
         displayName: user.displayName,
         email: user.email,

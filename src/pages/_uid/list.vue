@@ -56,6 +56,12 @@ import { mapState } from 'vuex'
 import { db } from '~/plugins/firebase'
 
 export default {
+  filters: {
+    maskEmail(email) {
+      if (!email) return
+      return email.replace(/.*(.{3}@)/g, 'xxx$1')
+    }
+  },
   computed: {
     ...mapState(['user'])
   },
@@ -84,12 +90,6 @@ export default {
       })
     }
     return { item }
-  },
-  filters: {
-    maskEmail(email) {
-      if (!email) return
-      return email.replace(/.*(.{3}@)/g, 'xxx$1')
-    }
   }
 }
 </script>
